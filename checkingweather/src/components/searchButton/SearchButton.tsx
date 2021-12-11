@@ -1,41 +1,45 @@
 import Button from "@material-ui/core/Button";
 import SearchIcon from "@material-ui/icons/Search";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import useInput from "../../hooks/useInput";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useContext } from "react";
 import CityContext from "../../context/CityContext";
+import "./searchButton.css";
 
-const useStyles = makeStyles((theme) => ({
-  button: {
-    margin: theme.spacing(1),
-  },
-  root: {
-    "& > *": {
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    button: {
       margin: theme.spacing(1),
-      width: "25ch",
     },
-  },
-}));
+    root: {
+      "& > *": {
+        margin: theme.spacing(1),
+        width: "25ch",
+      },
+    },
+  })
+);
 
-export default function IconLabelButtons() {
+export default function SearchButton() {
   const ctx = useContext(CityContext);
-  const [city, setCity] = ctx;
+  const [, setCity] = ctx;
   const classes = useStyles();
   const history = useHistory();
   const {
     value: cityValue,
     hasError: cityHasError,
     valueChangeHandler: cityChangeHandler,
-  } = useInput((value) => value.trim() !== "");
-  const handleSubmit = (cityValue) => {
+  } = useInput((value: string) => value.trim() !== "");
+  const handleSubmit = (cityValue: string) => {
+    if (setCity === undefined) return;
     setCity(cityValue);
     history.push("/weather");
   };
 
   return (
-    <div>
+    <div className="searchwrapper">
       <form className={classes.root} noValidate autoComplete="off">
         <TextField
           id="outlined-basic"
@@ -51,6 +55,7 @@ export default function IconLabelButtons() {
       <Button
         variant="contained"
         color="secondary"
+        disabled= {cityValue === ""}
         className={classes.button}
         startIcon={<SearchIcon />}
         onClick={() => {
@@ -59,7 +64,6 @@ export default function IconLabelButtons() {
       >
         Search
       </Button>
-      <Link to="/weather"> test1</Link>
     </div>
   );
 }

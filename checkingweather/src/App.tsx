@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import Home from "./pages/Home";
-import { Route } from "react-router-dom";
-import Weather from "./pages/Weather";
+import { Route,Redirect } from "react-router-dom";
+import Weather from "./pages/weather/Weather";
 import CityContext from "./context/CityContext";
+import Home from "./pages/home/Home";
 
 const App = () => {
   const [city, setCity] = useState("");
 
   return (
     <CityContext.Provider value={[city, setCity]}>
+      <Redirect from="/" to="home" />
       <Route path="/home">
         <Home />
       </Route>
